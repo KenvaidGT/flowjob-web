@@ -1,32 +1,78 @@
-1. Timur Koshelev and Tomash Nedved
-2. The idea is a website for managing a Discord bot with admin rights on the Discord server. Adding and editing tasks on the website.
-3. Stack:
-    Frontend:
-        React - building the admin panel interface, forms, tables, and UI state
-        Vite - fast development server and project bundling
-        React Query - handling REST API requests, data caching, and automatic updates for tasks and submissions
-        TypeScript - API contract typing, role and state validation, and prevention of runtime errors
-    Backend:
-        PostgreSQL - storing tasks, submissions, users, and evaluation results
-        Redis - caching and submission evaluation queue
-        REST API - communication between the website, Discord bot, and evaluation server
-        Docker - service isolation and reproducible deployment
-        CI/CD - automated build and deployment pipeline
-        Cloudflared - secure server access without exposing a public IP address
-        discord OAuth - administrator authentication via Discord
-    Endpoints(can be edited later):
-    Tasks:
-        GET     /tasks
-        POST    /tasks
-        PATCH     /tasks/:id
-        DELETE  /tasks/:id
+# Flowjob web
 
-    Submissions:
-        POST    /submissions
-        GET     /submissions/:id
-        GET     /submissions?taskId=
+## Authors 
+- **Timur Koshelev**
+- **Tomash Nedved**
 
-    Bot:
-        GET     /bot/tasks
-        POST    /bot/submit
-        GET     /bot/result/:submissionId
+---
+
+## Project Idea
+Flowjob is a web-based administration panel for managing a Discord bot with administrator rights on a Discord server.  
+The website allows administrators to create, edit, and manage tasks that are then distributed and evaluated through the Discord bot.
+
+---
+
+## Technology Stack
+
+### Frontend
+- **React**  
+*Building the admin panel interface, forms, tables, and UI state
+
+- **Vite**  
+  Fast development server and project bundling
+
+- **React Query**  
+  Handling REST API requests, data caching, and automatic updates for tasks and submissions
+
+- **TypeScript**  
+  API contract typing, role and state validation, and prevention of runtime errors
+
+---
+
+### Backend
+- **PostgreSQL**  
+  Storing tasks, submissions, users, and evaluation results
+
+- **Redis**  
+  Caching and submission evaluation queue
+
+- **REST API**  
+  Communication between the website, Discord bot, and evaluation server
+
+- **Docker**  
+  Service isolation and reproducible deployment
+
+- **CI/CD**  
+  Automated build and deployment pipeline
+
+- **Cloudflared**  
+  Secure server access without exposing a public IP address
+
+- **Discord OAuth**  
+  Administrator authentication via Discord
+
+---
+
+## API Endpoints  
+*(Can be edited later)*
+
+### Tasks
+```http
+GET     /tasks
+POST    /tasks
+PATCH   /tasks/:id
+DELETE  /tasks/:id
+```
+### Submissions
+```
+POST    /submissions
+GET     /submissions/:id
+GET     /submissions?taskId=
+```
+### Bot
+```
+GET     /bot/tasks
+POST    /bot/submit
+GET     /bot/result/:submissionId
+```
+😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈
