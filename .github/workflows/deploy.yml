@@ -9,17 +9,29 @@ jobs:
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.0
+        env:
+          VITE_DISCORD_CLIENT_ID: ${{ secrets.VITE_DISCORD_CLIENT_ID }}
+          VITE_DISCORD_REDIRECT_URI: ${{ secrets.VITE_DISCORD_REDIRECT_URI }}
+          VITE_DISCORD_SCOPES: ${{ secrets.VITE_DISCORD_SCOPES }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.DEPLOY_PORT || '22' }}
+          envs: VITE_DISCORD_CLIENT_ID,VITE_DISCORD_REDIRECT_URI,VITE_DISCORD_SCOPES
           script: |
             set -e
             cd "${{ secrets.DEPLOY_APP_DIR }}"
             if command -v git >/dev/null 2>&1; then
               git pull --ff-only || true
             fi
+
+            umask 077
+            {
+              echo "VITE_DISCORD_CLIENT_ID=${VITE_DISCORD_CLIENT_ID}"
+              echo "VITE_DISCORD_REDIRECT_URI=${VITE_DISCORD_REDIRECT_URI}"
+              echo "VITE_DISCORD_SCOPES=\"${VITE_DISCORD_SCOPES//\"/\\\"}\""
+            } > .env
 
             docker compose -f docker-compose.prod.yml up -d --build
 

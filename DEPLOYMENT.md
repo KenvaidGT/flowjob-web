@@ -17,10 +17,12 @@ Note: `VITE_*` variables are baked in at build time by Vite. If you change Disco
 
 1. On the server, create a folder (for example `/opt/flowjob-web`) and copy in:
    - the repo (clone it), or at least: `Dockerfile`, `deploy/`, `docker-compose.prod.yml`
-2. Create `/opt/flowjob-web/.env` with your build-time Vite vars:
-   - `VITE_DISCORD_CLIENT_ID=...`
-   - `VITE_DISCORD_REDIRECT_URI=...` (optional)
-   - `VITE_DISCORD_SCOPES=identify email` (optional)
+2. Provide your build-time Vite vars:
+   - Either create `/opt/flowjob-web/.env` manually, or
+   - Set GitHub repo secrets and run the SSH deploy workflow (it will write `.env` automatically):
+     - `VITE_DISCORD_CLIENT_ID`
+     - `VITE_DISCORD_REDIRECT_URI` (optional)
+     - `VITE_DISCORD_SCOPES` (optional)
 3. Build & start:
 
 ```bash
