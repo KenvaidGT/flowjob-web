@@ -16,4 +16,4 @@ services:
     restart: unless-stopped
     volumes:
       - ./deploy/cloudflared/config.yml:/etc/cloudflared/config.yml:ro
-      - ./deploy/cloudflared/credentials.json:/etc/cloudflared/credentials.json:ro
+      - ./deploy/cloudflared/credentials.json:/etc/cloudflared/9b32e2ee-377a-403f-8b7c-a28f5edd7bb1.json:ro
