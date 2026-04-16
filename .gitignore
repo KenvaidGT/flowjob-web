@@ -16,8 +16,9 @@ dist-ssr
 deploy/cloudflared/config.yml
 deploy/cloudflared/*credentials*.json
 deploy/cloudflared/*.pem
-
-DEPLOYMENT.md
+deploy/.cloudflared/config.yml
+deploy/.cloudflared/*credentials*.json
+deploy/.cloudflared/*.pem
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

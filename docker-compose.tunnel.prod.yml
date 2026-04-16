@@ -7,13 +7,29 @@ services:
         VITE_DISCORD_REDIRECT_URI: ${VITE_DISCORD_REDIRECT_URI}
         VITE_DISCORD_SCOPES: ${VITE_DISCORD_SCOPES}
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   cloudflared:
     image: cloudflare/cloudflared:latest
-    command: tunnel --config /etc/.cloudflared/config.yml run
+    command: tunnel --config /etc/cloudflared/config.yml --metrics 0.0.0.0:2000 run
     depends_on:
-      - web
+      web:
+        condition: service_healthy
     restart: unless-stopped
     volumes:
-      - ./deploy/.cloudflared/config.yml
-      - ./deploy/.cloudflared/9b32e2ee-377a-403f-8b7c-a28f5edd7bb1.json
+      - ./deploy/.cloudflared:/etc/cloudflared:ro
+    healthcheck:
+      test: ["CMD-SHELL", "command -v wget >/dev/null 2>&1 && wget -q -O /dev/null http://127.0.0.1:2000/ready || exit 0"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

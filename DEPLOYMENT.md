@@ -35,11 +35,11 @@ If your server already has a Cloudflare Tunnel for `flowjob.id.lv`, you can run 
 
 1. In the same app dir (example `/opt/flowjob-web`), copy:
    - `docker-compose.tunnel.prod.yml`
-   - `deploy/cloudflared/config.yml.example` → `deploy/cloudflared/config.yml`
+   - `deploy/.cloudflared/config.yml.example` → `deploy/.cloudflared/config.yml`
 2. Put your tunnel credentials file at:
-   - `/opt/flowjob-web/deploy/cloudflared/credentials.json`
+   - `/opt/flowjob-web/deploy/.cloudflared/credentials.json`
    - (usually you get it from the server at `~/.cloudflared/<tunnel-id>.json` and copy/rename it)
-3. Edit `/opt/flowjob-web/deploy/cloudflared/config.yml`:
+3. Edit `/opt/flowjob-web/deploy/.cloudflared/config.yml`:
    - set `tunnel:` to your tunnel name/UUID
    - keep `hostname: flowjob.id.lv`
 4. Start:
@@ -51,6 +51,7 @@ docker compose -f docker-compose.tunnel.prod.yml up -d --build
 Notes:
 - This setup does not publish ports publicly; traffic goes Cloudflare → `cloudflared` → `web:80` over the Docker network.
 - If you also need local access on the server, you can add ports back to `web` in `docker-compose.tunnel.prod.yml`.
+- `docker-compose.tunnel.prod.yml` exposes cloudflared metrics on `:2000` inside the container and includes a healthcheck.
 
 ## GitHub Actions
 
