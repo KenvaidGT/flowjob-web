@@ -1,0 +1,138 @@
+
+/* Theme tokens */
+:root {
+  --bg: #F7F8FA;
+  --text: #222;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --card-bg: #ffffff;
+  --link: #222;
+  --hover: rgba(0, 0, 0, 0.04);
+}
+
+html[data-theme="dark"] {
+  --bg: #0b1220;
+  --text: #e5e7eb;
+  --surface: #0f172a;
+  --border: #1f2937;
+  --card-bg: #0f172a;
+  --link: #e5e7eb;
+  --hover: rgba(255, 255, 255, 0.08);
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+  font-family: Inter, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand {
+  margin: 0;
+  font-size: 20px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--link);
+  font-weight: 500;
+}
+
+.theme-toggle {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 10px;
+  cursor: pointer;
+  font: inherit;
+  line-height: 0;
+}
+
+.theme-toggle:hover {
+  background: var(--hover);
+}
+
+.theme-toggle--floating {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 50;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="dark"] .theme-toggle--floating {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.theme-toggle__icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.page-grid {
+  margin-top: 32px;
+}
+
+.grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
