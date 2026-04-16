@@ -11,7 +11,13 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+deploy/cloudflared/config.yml
+deploy/cloudflared/*credentials*.json
+deploy/cloudflared/*.pem
 
+DEPLOYMENT.md
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

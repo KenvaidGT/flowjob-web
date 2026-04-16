@@ -1,0 +1,15 @@
+services:
+  web:
+    image: ${FLOWJOB_WEB_IMAGE:-ghcr.io/your-org/flowjob-web:latest}
+    restart: unless-stopped
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --config /etc/cloudflared/config.yml run
+    depends_on:
+      - web
+    restart: unless-stopped
+    volumes:
+      - ./deploy/cloudflared/config.yml:/etc/cloudflared/config.yml:ro
+      - ./deploy/cloudflared/credentials.json:/etc/cloudflared/credentials.json:ro
+

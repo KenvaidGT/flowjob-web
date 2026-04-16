@@ -1,0 +1,12 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        VITE_DISCORD_CLIENT_ID: ${VITE_DISCORD_CLIENT_ID}
+        VITE_DISCORD_REDIRECT_URI: ${VITE_DISCORD_REDIRECT_URI}
+        VITE_DISCORD_SCOPES: ${VITE_DISCORD_SCOPES}
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+

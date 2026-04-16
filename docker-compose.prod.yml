@@ -1,0 +1,7 @@
+services:
+  web:
+    image: ${FLOWJOB_WEB_IMAGE:-ghcr.io/your-org/flowjob-web:latest}
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+

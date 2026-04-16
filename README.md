@@ -12,6 +12,23 @@ The website allows administrators to create, edit, and manage tasks that are the
 
 ---
 
+## Discord login (frontend)
+
+This repo includes a simple Discord OAuth login for the UI:
+
+- Copy `.env.example` to `.env.local`
+- Set `VITE_DISCORD_CLIENT_ID`
+- Ensure your Discord Application has the redirect URL set to `http://localhost:5173/auth/discord/callback` (or your chosen `VITE_DISCORD_REDIRECT_URI`)
+
+Run:
+```bash
+npm run dev
+```
+
+## Deployment
+
+See `DEPLOYMENT.md`.
+
 ## Technology Stack
 
 ### Frontend
