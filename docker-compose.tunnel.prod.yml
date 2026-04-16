@@ -10,7 +10,7 @@ services:
 
   cloudflared:
     image: cloudflare/cloudflared:latest
-    command: tunnel --config /etc/cloudflared/config.yml run
+    command: tunnel --config /etc/.cloudflared/config.yml run
     depends_on:
       - web
     restart: unless-stopped
