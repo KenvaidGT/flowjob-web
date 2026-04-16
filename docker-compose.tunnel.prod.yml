@@ -1,6 +1,11 @@
 services:
   web:
-    image: ${FLOWJOB_WEB_IMAGE:-ghcr.io/your-org/flowjob-web:latest}
+    build:
+      context: .
+      args:
+        VITE_DISCORD_CLIENT_ID: ${VITE_DISCORD_CLIENT_ID}
+        VITE_DISCORD_REDIRECT_URI: ${VITE_DISCORD_REDIRECT_URI}
+        VITE_DISCORD_SCOPES: ${VITE_DISCORD_SCOPES}
     restart: unless-stopped
 
   cloudflared:
@@ -12,4 +17,3 @@ services:
     volumes:
       - ./deploy/cloudflared/config.yml:/etc/cloudflared/config.yml:ro
       - ./deploy/cloudflared/credentials.json:/etc/cloudflared/credentials.json:ro
-
