@@ -7,11 +7,10 @@ services:
         VITE_DISCORD_REDIRECT_URI: ${VITE_DISCORD_REDIRECT_URI}
         VITE_DISCORD_SCOPES: ${VITE_DISCORD_SCOPES}
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     restart: unless-stopped
     logging:
       driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
-
