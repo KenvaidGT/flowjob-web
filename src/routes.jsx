@@ -1,21 +1,26 @@
 import React from 'react'
-import SimplePage from './pages/SimplePage.jsx'
+import Dashboard from './pages/Dashboard.jsx'
+import Tasks from './pages/Tasks.jsx'
+import Statistics from './pages/Statistics.jsx'
+import Achievements from './pages/Achievements.jsx'
+import Leaderboard from './pages/Leaderboard.jsx'
+import Admin from './pages/Admin.jsx'
 import Login from './pages/Login.jsx'
 import AuthCallback from './pages/AuthCallback.jsx'
 import Profile from './pages/Profile.jsx'
 import RequireAuth from './auth/RequireAuth.jsx'
 
 export const routes = [
-  { path: '/', element: <SimplePage title="Dashboard" description="Overview of your progress and recent activity." /> },
-  { path: '/tasks', element: <SimplePage title="Tasks" description="Browse and solve algorithmic challenges." /> },
-  { path: '/statistics', element: <SimplePage title="Statistics" description="Visual insights into performance and progress." /> },
-  { path: '/achievements', element: <SimplePage title="Achievements" description="Track badges and milestones earned." /> },
-  { path: '/leaderboard', element: <SimplePage title="Leaderboard" description="Compare results with other users." /> },
+  { path: '/', element: <Dashboard /> },
+  { path: '/tasks', element: <Tasks /> },
+  { path: '/statistics', element: <Statistics /> },
+  { path: '/achievements', element: <Achievements /> },
+  { path: '/leaderboard', element: <Leaderboard /> },
   {
     path: '/admin',
     element: (
       <RequireAuth>
-        <SimplePage title="Admin Panel" description="Create and manage tasks, users, and achievements." />
+        <Admin />
       </RequireAuth>
     ),
   },
