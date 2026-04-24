@@ -10,7 +10,9 @@ function loadStoredSession() {
     if (!parsed?.accessToken || !parsed?.expiresAt) return null;
     if (Date.now() >= parsed.expiresAt) return null;
     return parsed;
-  } catch {
+  } catch (err) {
+    console.warn('Failed to parse stored session, clearing:', err.message);
+    localStorage.removeItem(STORAGE_KEY);
     return null;
   }
 }
