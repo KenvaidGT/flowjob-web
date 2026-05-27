@@ -17,14 +17,16 @@ function loadStoredSession() {
   }
 }
 
-async function apiFetch(endpoint, options = {}) {
+function authHeaders() {
   const stored = loadStoredSession();
-  const accessToken = stored?.accessToken;
+  return stored?.accessToken ? { Authorization: `Bearer ${stored.accessToken}` } : {};
+}
 
+async function apiFetch(endpoint, options = {}) {
   const res = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers: {
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      ...authHeaders(),
       'Content-Type': 'application/json',
       ...options.headers,
     },
@@ -40,14 +42,44 @@ async function apiFetch(endpoint, options = {}) {
 }
 
 export const api = {
+  // Tasks
   getTasks: () => apiFetch('/tasks'),
 
+  createTask: (body) =>
+    apiFetch('/tasks', { method: 'POST', body: JSON.stringify(body) }),
+
+  // Users
   createUser: (body) =>
     apiFetch('/users', { method: 'POST', body: JSON.stringify(body) }),
 
+  // Task management
   assignTask: (body) =>
     apiFetch('/assign-task', { method: 'POST', body: JSON.stringify(body) }),
 
+  taskDone: (body) =>
+    apiFetch('/task-done', { method: 'POST', body: JSON.stringify(body) }),
+
+  // Solutions
   submitSolution: (body) =>
     apiFetch('/solution', { method: 'POST', body: JSON.stringify(body) }),
+
+  // Files (draw.io)
+  uploadDrawio: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: 'POST',
+      headers: { ...authHeaders() },
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: res.statusText }));
+      throw new Error(err.detail ?? 'Upload failed');
+    }
+    return res.json();
+  },
+
+  getFile: (fileId) => apiFetch(`/file/${fileId}`),
 };
