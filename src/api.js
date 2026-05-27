@@ -22,16 +22,22 @@ function authHeaders() {
   return stored?.accessToken ? { Authorization: `Bearer ${stored.accessToken}` } : {};
 }
 
-/** Safely parse response: try JSON, fallback to text */
+/** Read response as text first, then try JSON parse */
 async function parseResponse(res) {
   const text = await res.text();
   if (!text) return null;
   try {
     return JSON.parse(text);
   } catch {
-    // Not JSON — return raw text wrapped so callers can read .detail
-    console.warn(`Non-JSON response from ${res.url}:`, text.slice(0, 300));
-    return { _raw: text };
+    console.warn(`Non-JSON from ${res.url} [${res.status}]:`, text.slice(0, 300));
+    // If HTML came back — most likely the API_BASE is wrong (hitting frontend)
+    if (text.trimStart().startsWith('<')) {
+      throw new Error(
+        `API returned HTML instead of JSON. Check VITE_API_BASE.\n` +
+        `Currently pointing at: ${API_BASE}`
+      );
+    }
+    throw new Error(`Unexpected response: ${text.slice(0, 150)}`);
   }
 }
 
@@ -55,13 +61,11 @@ async function apiFetch(endpoint, options = {}) {
   const data = await parseResponse(res);
 
   if (!res.ok) {
-    // FastAPI puts error message in data.detail
     const detail =
       (typeof data?.detail === 'string' ? data.detail : null) ||
       (Array.isArray(data?.detail)
         ? data.detail.map((e) => `${e.loc?.join('.')}: ${e.msg}`).join('; ')
         : null) ||
-      data?._raw?.slice(0, 200) ||
       res.statusText ||
       `HTTP ${res.status}`;
     throw new Error(detail);
@@ -71,28 +75,23 @@ async function apiFetch(endpoint, options = {}) {
 }
 
 export const api = {
-  // Tasks
   getTasks: () => apiFetch('/tasks'),
 
   createTask: (body) =>
     apiFetch('/tasks', { method: 'POST', body: JSON.stringify(body) }),
 
-  // Users
   createUser: (body) =>
     apiFetch('/users', { method: 'POST', body: JSON.stringify(body) }),
 
-  // Task management
   assignTask: (body) =>
     apiFetch('/assign-task', { method: 'POST', body: JSON.stringify(body) }),
 
   taskDone: (body) =>
     apiFetch('/task-done', { method: 'POST', body: JSON.stringify(body) }),
 
-  // Solutions
   submitSolution: (body) =>
     apiFetch('/solution', { method: 'POST', body: JSON.stringify(body) }),
 
-  // Files (draw.io)
   uploadDrawio: async (file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -101,7 +100,7 @@ export const api = {
     try {
       res = await fetch(`${API_BASE}/upload`, {
         method: 'POST',
-        headers: { ...authHeaders() },  // no Content-Type — browser sets multipart boundary
+        headers: { ...authHeaders() },
         body: formData,
       });
     } catch (networkErr) {
@@ -113,7 +112,6 @@ export const api = {
     if (!res.ok) {
       const detail =
         (typeof data?.detail === 'string' ? data.detail : null) ||
-        data?._raw?.slice(0, 200) ||
         res.statusText;
       throw new Error(detail);
     }
