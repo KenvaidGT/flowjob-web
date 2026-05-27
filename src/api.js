@@ -22,23 +22,52 @@ function authHeaders() {
   return stored?.accessToken ? { Authorization: `Bearer ${stored.accessToken}` } : {};
 }
 
-async function apiFetch(endpoint, options = {}) {
-  const res = await fetch(`${API_BASE}${endpoint}`, {
-    ...options,
-    headers: {
-      ...authHeaders(),
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+/** Safely parse response: try JSON, fallback to text */
+async function parseResponse(res) {
+  const text = await res.text();
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Not JSON — return raw text wrapped so callers can read .detail
+    console.warn(`Non-JSON response from ${res.url}:`, text.slice(0, 300));
+    return { _raw: text };
+  }
+}
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(err.detail ?? 'API error');
+async function apiFetch(endpoint, options = {}) {
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${endpoint}`, {
+      ...options,
+      headers: {
+        ...authHeaders(),
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+  } catch (networkErr) {
+    throw new Error(`Network error: ${networkErr.message}`);
   }
 
   if (res.status === 204) return null;
-  return res.json();
+
+  const data = await parseResponse(res);
+
+  if (!res.ok) {
+    // FastAPI puts error message in data.detail
+    const detail =
+      (typeof data?.detail === 'string' ? data.detail : null) ||
+      (Array.isArray(data?.detail)
+        ? data.detail.map((e) => `${e.loc?.join('.')}: ${e.msg}`).join('; ')
+        : null) ||
+      data?._raw?.slice(0, 200) ||
+      res.statusText ||
+      `HTTP ${res.status}`;
+    throw new Error(detail);
+  }
+
+  return data;
 }
 
 export const api = {
@@ -68,17 +97,27 @@ export const api = {
     const formData = new FormData();
     formData.append('file', file);
 
-    const res = await fetch(`${API_BASE}/upload`, {
-      method: 'POST',
-      headers: { ...authHeaders() },
-      body: formData,
-    });
+    let res;
+    try {
+      res = await fetch(`${API_BASE}/upload`, {
+        method: 'POST',
+        headers: { ...authHeaders() },  // no Content-Type — browser sets multipart boundary
+        body: formData,
+      });
+    } catch (networkErr) {
+      throw new Error(`Network error: ${networkErr.message}`);
+    }
+
+    const data = await parseResponse(res);
 
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(err.detail ?? 'Upload failed');
+      const detail =
+        (typeof data?.detail === 'string' ? data.detail : null) ||
+        data?._raw?.slice(0, 200) ||
+        res.statusText;
+      throw new Error(detail);
     }
-    return res.json();
+    return data;
   },
 
   getFile: (fileId) => apiFetch(`/file/${fileId}`),
