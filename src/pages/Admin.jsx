@@ -33,7 +33,7 @@ function CreateUserForm({ onSuccess }) {
     setLoading(true);
     setError('');
     try {
-      await api.createUser({ discord_id: Number(discordId), username, group_name: group });
+      await api.createUser({ discord_id: String(discordId), username, group_name: group });
       setDiscordId(''); setUsername(''); setGroup('');
       onSuccess?.('User created successfully.');
     } catch (err) {
@@ -167,7 +167,7 @@ function AssignTaskForm({ tasks, onSuccess }) {
     setLoading(true);
     setError('');
     try {
-      await api.assignTask({ discord_id: Number(discordId), task_name: taskName });
+      await api.assignTask({ discord_id: String(discordId), task_name: taskName });
       setDiscordId(''); setTaskName('');
       onSuccess?.('Task assigned successfully.');
     } catch (err) {
@@ -220,7 +220,7 @@ function TaskDoneForm({ tasks, onSuccess }) {
     setLoading(true);
     setError('');
     try {
-      await api.taskDone({ discord_id: Number(discordId), task_name: taskName });
+      await api.taskDone({ discord_id: String(discordId), task_name: taskName });
       setDiscordId(''); setTaskName('');
       onSuccess?.('Task marked as done.');
     } catch (err) {

@@ -50,7 +50,7 @@ function SolutionModal({ task, onClose, onSuccess }) {
       }
 
       await api.submitSolution({
-        discord_id: Number(discordId),
+        discord_id: String(discordId),
         task_name: task.name,
         ...(file_id != null ? { file_id } : {}),
       });
